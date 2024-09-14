@@ -43,3 +43,17 @@ export async function POST(req: NextRequest) {
     const { success } = streamSchema.safeParse(data);
 }
 
+export async function GET(req: NextRequest) {
+    const creatorId = req.nextUrl.searchParams.get("creatorId");
+    
+    const streams = await prismaClient.user.findMany({
+        where: {
+            userId: creatorId ?? ""
+        }
+    })
+    
+    return NextResponse.json({
+        streams
+    })
+}
+
