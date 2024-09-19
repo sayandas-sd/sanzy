@@ -19,7 +19,7 @@ export async function POST(req:NextRequest) {
 
     if(!user) {
         return NextResponse.json({
-            msg: "unauthenricate"
+            message: "unauthenricate"
         },{
             status: 403
         })
@@ -38,7 +38,7 @@ export async function POST(req:NextRequest) {
         })
     } catch(e) {
         return NextResponse.json({
-            msg: "Error in upvoting"
+            message: "Error in upvoting"
         },{
             status: 403
         })
