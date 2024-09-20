@@ -7,7 +7,7 @@ var YT_REGEX = /^(?:(?:https?:)?\/\/)?(?:www\.)?(?:m\.)?(?:youtu(?:be)?\.com\/(?
 
 //@ts-ignore
 import youtubesearchapi from "youtube-search-api";
-import { stringify } from "querystring";
+
 
 
 const streamSchema = z.object({

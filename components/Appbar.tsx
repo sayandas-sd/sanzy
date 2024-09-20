@@ -11,7 +11,7 @@ export function Appbar() {
     const session = useSession();
 
     return <div className="flex justify-between px-20 bg-gray-950 ">
-        <Link className="flex items-center justify-center" href="#">
+        <Link className="flex items-center justify-center" href="/">
             <Music className="h-6 w-6 text-purple-500" />
             <span className="ml-2 text-3xl font-bold text-white">Sanzy</span>
           </Link>

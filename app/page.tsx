@@ -25,7 +25,7 @@ export default function LandingPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-950 text-gray-100 items-center ">
-      
+
         <Redirect />
      
       <main className="flex-0 pt-16">
@@ -189,7 +189,7 @@ export default function LandingPage() {
       <footer className="border-t border-gray-800 bg-gray-950">
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400">&copy; 2023 Sanzy. All rights reserved.</p>
+            <p className="text-gray-400">&copy; 2024 Sanzy. All rights reserved.</p>
             <nav className="flex space-x-4 mt-4 md:mt-0">
               <Link href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
                 Privacy

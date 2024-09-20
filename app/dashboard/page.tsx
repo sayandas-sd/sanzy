@@ -1,25 +1,45 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { ThumbsUp, ThumbsDown, Play, Link } from "lucide-react"
+import { ThumbsUp, ThumbsDown, Play, Music } from "lucide-react"
+import axios from "axios";
 
 interface Video {
   id: string
   title: string
-  votes: number
+  likes: number
+  dislikes: number
 }
+
+const REFRESH = 10 * 1000;
 
 export default function Component() {
   const [inputLink, setInputLink] = useState("")
   const [previewId, setPreviewId] = useState("")
   const [currentVideo, setCurrentVideo] = useState<Video | null>(null)
   const [queue, setQueue] = useState<Video[]>([
-    { id: "dQw4w9WgXcQ", title: "Rick Astley - Never Gonna Give You Up", votes: 5 },
-    { id: "L_jWHffIx5E", title: "Smash Mouth - All Star", votes: 3 },
-    { id: "fJ9rUzIMcZQ", title: "Queen - Bohemian Rhapsody", votes: 4 },
+    { id: "dQw4w9WgXcQ", title: "Rick Astley - Never Gonna Give You Up", likes: 5, dislikes: 1 },
+    { id: "L_jWHffIx5E", title: "Smash Mouth - All Star", likes: 3, dislikes: 2 },
+    { id: "fJ9rUzIMcZQ", title: "Queen - Bohemian Rhapsody", likes: 4, dislikes: 0 },
   ])
+
+  async function refreshStreams() {
+    const res = await fetch(`api/streams/song`,{
+        credentials: "include"
+    });
+    console.log(res)
+  }
+
+  useEffect(()=>{
+    refreshStreams();
+    const interval = setInterval(() => {
+        
+    }, REFRESH);
+
+  },[])
+
 
   const extractVideoId = (url: string) => {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/
@@ -39,17 +59,19 @@ export default function Component() {
 
   const handleAddVideo = () => {
     if (previewId) {
-      const newVideo = { id: previewId, title: `Video ${previewId}`, votes: 0 }
+      const newVideo = { id: previewId, title: `Video ${previewId}`, likes: 0, dislikes: 0 }
       setQueue([...queue, newVideo])
       setInputLink("")
       setPreviewId("")
     }
   }
 
-  const handleVote = (id: string, increment: number) => {
+  const handleVote = (id: string, isLike: boolean) => {
     setQueue(queue.map(video => 
-      video.id === id ? { ...video, votes: video.votes + increment } : video
-    ).sort((a, b) => b.votes - a.votes))
+      video.id === id
+        ? { ...video, [isLike ? 'likes' : 'dislikes']: video[isLike ? 'likes' : 'dislikes'] + 1 }
+        : video
+    ).sort((a, b) => (b.likes - b.dislikes) - (a.likes - a.dislikes)))
   }
 
   const playNext = () => {
@@ -62,7 +84,8 @@ export default function Component() {
   return (
     <div className="flex flex-col min-h-screen bg-gray-950 text-gray-100 items-center">
       <div className="container mx-auto p-4 max-w-4xl">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-20">
+        <h1 className="text-3xl font-bold text-center mb-8">Stream Song Voting </h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           <div className="space-y-4">
             <h2 className="text-2xl font-bold">Current Video</h2>
             {currentVideo ? (
@@ -80,7 +103,7 @@ export default function Component() {
                 <p>No video playing</p>
               </div>
             )}
-            <Button onClick={playNext} className="w-full">
+            <Button onClick={playNext} className="w-full bg-purple-600 hover:bg-purple-700 text-white mt-7">
               <Play className="mr-2 h-4 w-4" /> Play Next
             </Button>
           </div>
@@ -94,7 +117,7 @@ export default function Component() {
                 onChange={handleInputChange}
                 className="bg-gray-800 border-gray-700 text-gray-100"
               />
-              <Button onClick={handleAddVideo}>Add</Button>
+              <Button onClick={handleAddVideo} className="bg-purple-600 hover:bg-purple-700 text-white">Add</Button>
             </div>
             {previewId && (
               <div className="aspect-video rounded-lg overflow-hidden">
@@ -109,60 +132,48 @@ export default function Component() {
             )}
           </div>
         </div>
-        <div className="mt-8">
+        <div>
           <h2 className="text-2xl font-bold mb-4">Upcoming Videos</h2>
           <ul className="space-y-4">
             {queue.map((video) => (
               <li key={video.id} className="flex items-center gap-4 bg-gray-800 p-4 rounded-lg">
-                <img
-                  src={`https://img.youtube.com/vi/${video.id}/default.jpg`}
-                  alt={video.title}
-                  className="w-24 h-18 object-cover rounded"
-                />
-                <span className="flex-grow">{video.title}</span>
-                <span className="font-bold text-xl">{video.votes}</span>
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Music className="w-8 h-8 text-white" />
+                </div>
+                <div className="flex-grow">
+                  <h3 className="font-semibold text-lg line-clamp-1">{video.title}</h3>
+                  <p className="text-sm text-gray-400">Score: {video.likes - video.dislikes}</p>
+                </div>
                 <div className="flex gap-2">
                   <Button
                     size="icon"
                     variant="ghost"
-                    onClick={() => handleVote(video.id, 1)}
-                    aria-label="Like"
-                    className="hover:bg-green-700/20"
+                    onClick={() => handleVote(video.id, true)}
+                    aria-label={`Like (${video.likes})`}
+                    className="relative"
                   >
-                    <ThumbsUp className="h-5 w-5 text-green-500" />
+                    <ThumbsUp className="h-5 w-5" />
+                    <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      {video.likes}
+                    </span>
                   </Button>
                   <Button
                     size="icon"
                     variant="ghost"
-                    onClick={() => handleVote(video.id, -1)}
-                    aria-label="Dislike"
-                    className="hover:bg-red-700/20"
+                    onClick={() => handleVote(video.id, false)}
+                    aria-label={`Dislike (${video.dislikes})`}
+                    className="relative"
                   >
-                    <ThumbsDown className="h-5 w-5 text-red-500" />
+                    <ThumbsDown className="h-5 w-5" />
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      {video.dislikes}
+                    </span>
                   </Button>
                 </div>
               </li>
             ))}
           </ul>
         </div>
-        <footer className="border-t border-gray-800 bg-gray-950">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400">&copy; 2024 Sanzy. All rights reserved.</p>
-            <nav className="flex space-x-4 mt-4 md:mt-0">
-              <Link href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
-                Privacy
-              </Link>
-              <Link href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
-                Terms
-              </Link>
-              <Link href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
-                Contact
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </footer>
       </div>
     </div>
   )
