@@ -13,16 +13,16 @@ export function Appbar() {
     return <div className="flex justify-between px-20 bg-gray-950 ">
         <Link className="flex items-center justify-center" href="#">
             <Music className="h-6 w-6 text-purple-500" />
-            <span className="ml-2 text-2xl font-bold text-white">Sanzy</span>
+            <span className="ml-2 text-3xl font-bold text-white">Sanzy</span>
           </Link>
           <nav className="hidden md:flex space-x-8 mt-4 ">
-            <Link className="text-sm font-medium hover:text-purple-400 text-lg font-bold transition-colors text-white" href="#features">
+            <Link className="text-sm font-medium hover:text-purple-400 text-xl font-bold transition-colors text-white" href="#features">
               Features
             </Link>
-            <Link className="text-sm font-medium hover:text-purple-400 text-lg font-bold transition-colors text-white" href="#popular">
+            <Link className="text-sm font-medium hover:text-purple-400 text-xl font-bold transition-colors text-white" href="#popular">
               Popular Streams
             </Link>
-            <Link className="text-sm font-medium hover:text-purple-400 text-lg font-bold transition-colors text-white" href="#faq">
+            <Link className="text-sm font-medium hover:text-purple-400 text-xl font-bold transition-colors text-white" href="#faq">
               FAQ
             </Link>
           </nav>

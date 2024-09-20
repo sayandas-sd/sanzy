@@ -4,6 +4,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Radio, Users, Headphones, Play } from "lucide-react"
 import { motion } from "framer-motion"
+import Redirect from "@/components/Redirect"
 
 
 export default function LandingPage() {
@@ -24,7 +25,8 @@ export default function LandingPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-950 text-gray-100 items-center ">
-        
+      
+        <Redirect />
      
       <main className="flex-0 pt-16">
         <section className="w-full py-24 md:py-32 bg-gray-900">
