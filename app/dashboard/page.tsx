@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ThumbsUp, ThumbsDown, Play, Music } from "lucide-react"
-import axios from "axios";
+
 
 interface Video {
   id: string
@@ -13,7 +13,6 @@ interface Video {
   dislikes: number
 }
 
-const REFRESH = 10 * 1000;
 
 export default function Component() {
   const [inputLink, setInputLink] = useState("")
@@ -24,21 +23,6 @@ export default function Component() {
     { id: "L_jWHffIx5E", title: "Smash Mouth - All Star", likes: 3, dislikes: 2 },
     { id: "fJ9rUzIMcZQ", title: "Queen - Bohemian Rhapsody", likes: 4, dislikes: 0 },
   ])
-
-  async function refreshStreams() {
-    const res = await fetch(`api/streams/song`,{
-        credentials: "include"
-    });
-    console.log(res)
-  }
-
-  useEffect(()=>{
-    refreshStreams();
-    const interval = setInterval(() => {
-        
-    }, REFRESH);
-
-  },[])
 
 
   const extractVideoId = (url: string) => {
@@ -72,7 +56,16 @@ export default function Component() {
         ? { ...video, [isLike ? 'likes' : 'dislikes']: video[isLike ? 'likes' : 'dislikes'] + 1 }
         : video
     ).sort((a, b) => (b.likes - b.dislikes) - (a.likes - a.dislikes)))
+
+    fetch("/api/streams/upvote",{
+      method: "POST",
+      body: JSON.stringify({
+        streamId: id
+      })
+    })
   }
+
+  
 
   const playNext = () => {
     if (queue.length > 0) {

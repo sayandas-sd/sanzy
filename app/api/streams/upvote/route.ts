@@ -18,7 +18,7 @@ export async function POST(req:NextRequest) {
 
     if(!user) {
         return NextResponse.json({
-            msg: "unauthenricate"
+            msg: "unauthenticate"
         },{
             status: 403
         })
@@ -32,6 +32,10 @@ export async function POST(req:NextRequest) {
                 userId: user.id,
                 streamId: data.streamId
             }
+        })
+
+        return NextResponse.json({
+            message: "complete"
         })
 
     } catch(e) {

@@ -38,7 +38,7 @@ export default function LandingPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                Let Your Fans Be the DJ
+                Let Your Fans Choose Song
               </motion.h1>
               <motion.p
                 className="mx-auto max-w-[700px] text-gray-400 md:text-xl"

@@ -27,7 +27,7 @@ export function Appbar() {
             </Link>
           </nav>
 
-          <div className="p-3 rounded-full">
+          <div className="p-3 rounded-full ">
             {session.data?.user && <Button 
                     className="px-6 bg-purple-600 hover:bg-purple-700"
                     onClick={()=>signOut()}

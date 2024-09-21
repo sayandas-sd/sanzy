@@ -32,7 +32,6 @@ export default function RootLayout({
         >
         <Providers>
         <Appbar />
-
           {children}
           
         </Providers>
